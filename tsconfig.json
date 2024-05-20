@@ -8,6 +8,6 @@
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist"
   },
-  "include": ["./*.ts"],
+  "include": ["./*.ts", "src/ImageMerger.ts", "src/index.ts"],
   "exclude": ["node_modules"]
 }
