@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "es6",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist"
   },
-  "include": ["src/ImageMerger.ts", "src/index.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
 }

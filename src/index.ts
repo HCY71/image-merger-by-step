@@ -1,4 +1,4 @@
-import ImageMerger, { Layer } from "./ImageMerger";
+import ImageMerger, { Layer, MergerOptions } from "./ImageMerger";
 
 export default ImageMerger;
-export type { Layer };
+export type { Layer, MergerOptions };

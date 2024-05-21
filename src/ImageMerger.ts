@@ -3,20 +3,22 @@ export interface Layer {
   size?: number;
   x?: number;
   y?: number;
+  opacity?: number;
+}
+export interface MergerOptions {
+  slices?: number[];
+  canvasSizes?: { width: number; height: number };
+  format?: "jpg" | "jpeg" | "png";
 }
 
 class ImageMerger {
-  private canvasWidth: number;
-  private canvasHeight: number;
-
-  constructor(canvasWidth: number = 2160, canvasHeight: number = 2160) {
-    this.canvasWidth = canvasWidth;
-    this.canvasHeight = canvasHeight;
-  }
-
-  private loadLayer(
-    layer: Layer
-  ): Promise<{ image: HTMLImageElement; size: number; x: number; y: number }> {
+  private loadLayer(layer: Layer): Promise<{
+    image: HTMLImageElement;
+    size: number;
+    x: number;
+    y: number;
+    opacity: number;
+  }> {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.crossOrigin = "Anonymous";
@@ -26,6 +28,7 @@ class ImageMerger {
           size: layer.size || 1,
           x: layer.x || 0,
           y: layer.y || 0,
+          opacity: layer.opacity || 1,
         });
       image.onerror = (err) =>
         reject(
@@ -35,64 +38,95 @@ class ImageMerger {
     });
   }
 
-  private async mergeLayers(layers: Layer[]): Promise<string> {
-    const canvas = document.createElement("canvas");
-    canvas.width = this.canvasWidth;
-    canvas.height = this.canvasHeight;
-    const context = canvas.getContext("2d");
+  private mergeLayers(
+    layers: Layer[],
+    options: MergerOptions
+  ): Promise<string> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const data = await Promise.all(
+          layers.map((layer) => this.loadLayer(layer))
+        );
+        // Get maximum width and height of all layers, to set canvas size
+        const sizeHelper = (dim: "width" | "height") =>
+          options.canvasSizes?.[dim] ??
+          Math.max(...data.map((d) => d.image[dim] * d.size));
 
-    if (!context) {
-      throw new Error("Failed to get canvas context");
-    }
+        const canvas = document.createElement("canvas");
+        canvas.width = sizeHelper("width");
+        canvas.height = sizeHelper("height");
+        const context = canvas.getContext("2d");
 
-    const data = await Promise.all(
-      layers.map((layer) => this.loadLayer(layer))
-    );
-    data.forEach(({ image, size, x, y }) => {
-      context.drawImage(
-        image,
-        0,
-        0,
-        image.width,
-        image.height,
-        x,
-        y,
-        image.width * size,
-        image.height * size
-      );
+        if (!context) {
+          reject(new Error("Failed to get canvas context"));
+          return;
+        }
+
+        let drawCounter = 0;
+        data.forEach(({ image, size, x, y, opacity }) => {
+          context.globalAlpha = opacity;
+          context.drawImage(
+            image,
+            0,
+            0,
+            image.width,
+            image.height,
+            x,
+            y,
+            image.width * size,
+            image.height * size
+          );
+          drawCounter++;
+
+          if (drawCounter === layers.length) {
+            const format =
+              options.format === "png" ? "image/png" : "image/jpeg";
+            const base64 = canvas.toDataURL(format, 1.0);
+            resolve(base64);
+          }
+        });
+      } catch (error) {
+        reject(error);
+      }
     });
-
-    return canvas.toDataURL("image/jpeg", 1.0);
   }
 
-  public async merge(
+  public merge(
     images: Layer[][],
-    slices: number[] = []
+    options: MergerOptions = {}
   ): Promise<string[]> {
-    if (slices.length > 0) {
-      const leftover =
-        images.length -
-        slices.reduce((acc, currentValue) => acc + currentValue, 0);
-      if (leftover > 0) slices.push(leftover);
+    return new Promise(async (resolve) => {
+      if (options.slices && options.slices.length > 0) {
+        const leftover =
+          images.length -
+          options.slices.reduce(
+            (accumulator, currentValue) => accumulator + currentValue,
+            0
+          );
+        if (leftover > 0) options.slices.push(leftover);
 
-      const results: string[] = [];
-      let start = 0;
+        let start = 0;
+        let result: string[] = [];
 
-      for (const slice of slices) {
-        const partOfImages = images.slice(start, start + slice);
-        start += slice;
+        const promiseInSeries = async (slices: number[]) => {
+          for (const s of slices) {
+            const partOfImages = images.slice(start, start + s);
+            start += s;
+            const base64List = await Promise.all(
+              partOfImages.map((layers) => this.mergeLayers(layers, options))
+            );
+            result = [...result, ...base64List];
+          }
+          if (result.length === images.length) resolve(result);
+        };
+        await promiseInSeries(options.slices);
+      } else {
         const base64List = await Promise.all(
-          partOfImages.map((layers) => this.mergeLayers(layers))
+          images.map((layers) => this.mergeLayers(layers, options))
         );
-        results.push(...base64List);
+        resolve(base64List);
       }
-
-      return results;
-    } else {
-      return await Promise.all(
-        images.map((layers) => this.mergeLayers(layers))
-      );
-    }
+    });
   }
 }
 
