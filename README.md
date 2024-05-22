@@ -117,7 +117,7 @@ imageMerger
 - image3.png
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/image3.png" width="250">
 - image3.png
----
+<hr>
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/result.png" width="250">
 - result.png
 
