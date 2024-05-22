@@ -31,7 +31,7 @@ Merging a series of images all at one time on low-end devices can be painful. He
 
 You can install the package via npm:
 
-```
+```bash
 npm install image-merger-by-steps
 
 ```
@@ -40,7 +40,7 @@ npm install image-merger-by-steps
 
 Here is an example of how to use image-merger-by-steps(checkout `/example` folder):
 
-```js
+```javascript
 import ImageMerger from "image-merger-by-steps";
 
 // Make sure the code below is running in a browser environment,
@@ -75,7 +75,7 @@ imageMerger
   });
 ```
 
-```ts
+```javascript
 import ImageMerger, { Layer } from "image-merger-by-steps";
 
 // Make sure the code below is running in a browser environment,
