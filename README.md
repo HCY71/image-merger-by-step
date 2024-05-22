@@ -110,7 +110,6 @@ imageMerger
     });
   });
 ```
-```
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/image1.png" width="250">
 - image1.png
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/image2.png" width="250">
@@ -120,7 +119,6 @@ imageMerger
 <hr>
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/result.png" width="250">
 - result.png
-```
 
 
 ## Contact
