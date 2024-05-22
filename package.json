@@ -1,6 +1,6 @@
 {
   "name": "image-merger-by-steps",
-  "version": "1.2.0",
+  "version": "1.4.0",
   "description": "A TypeScript module to load, merge images on the canvas with control over the merging steps.",
   "main": "dist/index.js",
   "scripts": {
