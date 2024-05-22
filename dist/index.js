@@ -1,2 +1,2 @@
-import ImageMerger from "./ImageMerger";
-export default ImageMerger;
+import ImageMerger from "./ImageMerger.js"
+export default ImageMerger
