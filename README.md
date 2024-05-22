@@ -41,6 +41,7 @@ npm install image-merger-by-steps
 Here is an example of how to use image-merger-by-steps(checkout `/example` folder):
 
 ```javascript
+// example.js
 import ImageMerger from "image-merger-by-steps";
 
 // Make sure the code below is running in a browser environment,
@@ -75,7 +76,8 @@ imageMerger
   });
 ```
 
-```javascript
+```typescript
+// example.ts
 import ImageMerger, { Layer } from "image-merger-by-steps";
 
 // Make sure the code below is running in a browser environment,
@@ -108,6 +110,11 @@ imageMerger
     });
   });
 ```
+![image1.png](https://github.com/HCY71/image-merger-by-steps/blob/main/example/image1.png)
+![image2.png](https://github.com/HCY71/image-merger-by-steps/blob/main/example/image2.png)
+![image3.png](https://github.com/HCY71/image-merger-by-steps/blob/main/example/image3.png)
+![result.png](https://github.com/HCY71/image-merger-by-steps/blob/main/example/result.png)
+
 
 ## Contact
 
