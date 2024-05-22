@@ -112,13 +112,16 @@ imageMerger
 ```
 
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/image1.png" width="250">
-*image1.png*
+| image1.png
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/image2.png" width="250">
-*image2.png*
+| image3.png
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/image3.png" width="250">
-*image3.png*
+| image3.png
+|
+|
+|
 <img src="https://github.com/HCY71/image-merger-by-steps/blob/main/example/result.png" width="250">
-*result.png*
+| result.png
 
 
 ## Contact
